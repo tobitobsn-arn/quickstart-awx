@@ -101,9 +101,9 @@ Parameters:
   AWXVersion:
     Description: Which version of AWX to use
     Type: String
-    Default: 17.1.0
+    Default: 19.1.0
     AllowedValues:
-      - 17.1.0
+      - 19.1.0
   AWXAdminPassword:
     Description: AWX Admin Password. Required
     Type: String
@@ -123,40 +123,92 @@ Parameters:
     Description: How many ECS hosts do you want to initially deploy?
     Type: Number
     Default: 2
+    MinValue: '2'
+    MaxValue: '20'
   InstanceType:
     Description: Which instance type should we use to build the ECS cluster?
     Type: String
-    Default: t3.large
+    Default: t3.medium
+    AllowedValues:
+      - t3.nano
+      - t3.micro
+      - t3.small
+      - t3.medium
+      - t3.large
+      - t3.xlarge
+      - t3.2xlarge
   DBInstanceClass:
     Description: The compute and memory capacity of the DB instance.
     Type: String
-    Default: db.m4.large
+    Default: db.m5.large
     AllowedValues:
-      - db.m1.small
-      - db.m1.medium
-      - db.m1.large
-      - db.m1.xlarge
-      - db.m2.xlarge
-      - db.m2.2xlarge
-      - db.m2.4xlarge
-      - db.m3.medium
-      - db.m3.large
-      - db.m3.xlarge
-      - db.m3.2xlarge
-      - db.m4.large
-      - db.m4.xlarge
-      - db.m4.2xlarge
-      - db.m4.4xlarge
+      - db.m5.large
+      - db.m5.xlarge
+      - db.m5.2xlarge
+      - db.m5.4xlarge
+      - db.m5.8xlarge
+      - db.m5.12xlarge
+      - db.m5.16xlarge
+      - db.m5.24xlarge
+      - db.m5d.large
+      - db.m5d.xlarge
+      - db.m5d.2xlarge
+      - db.m5d.4xlarge
+      - db.m5d.8xlarge
+      - db.m5d.12xlarge
+      - db.m5d.16xlarge
+      - db.m5d.24xlarge
       - db.m4.10xlarge
+      - db.m4.16xlarge
       - db.r3.large
       - db.r3.xlarge
       - db.r3.2xlarge
       - db.r3.4xlarge
       - db.r3.8xlarge
-      - db.t3.micro
-      - db.t3.small
-      - db.t3.medium
-      - db.t3.large
+      - db.r5.large
+      - db.r5.xlarge
+      - db.r5.2xlarge
+      - db.r5.4xlarge
+      - db.r5.8xlarge
+      - db.r5.12xlarge
+      - db.r5.16xlarge
+      - db.r5.24xlarge
+      - db.r5b.large
+      - db.r5b.xlarge
+      - db.r5b.2xlarge
+      - db.r5b.4xlarge
+      - db.r5b.8xlarge
+      - db.r5b.12xlarge
+      - db.r5b.16xlarge
+      - db.r5b.24xlarge
+      - db.r5d.large
+      - db.r5d.xlarge
+      - db.r5d.2xlarge
+      - db.r5d.4xlarge
+      - db.r5d.8xlarge
+      - db.r5d.12xlarge
+      - db.r5d.16xlarge
+      - db.r5d.24xlarge
+      - db.r4.large
+      - db.r4.xlarge
+      - db.r4.2xlarge
+      - db.r4.4xlarge
+      - db.r4.8xlarge
+      - db.r4.16xlarge
+      - db.x1.16xlarge
+      - db.x1.32xlarge
+      - db.x1e.xlarge
+      - db.x1e.2xlarge
+      - db.x1e.4xlarge
+      - db.x1e.8xlarge
+      - db.x1e.16xlarge
+      - db.x1e.32xlarge
+      - db.z1d.large
+      - db.z1d.xlarge
+      - db.z1d.2xlarge
+      - db.z1d.3xlarge
+      - db.z1d.6xlarge
+      - db.z1d.12xlarge
   BackupRetentionPeriod:
     Description: The number of days during which automatic DB snapshots are retained.
       Setting 0 disables automatic snapshots, maximum value is 35. Only applicable
@@ -197,7 +249,7 @@ Parameters:
       It cannot start or end with a hyphen (-).
     Type: String
   QSS3BucketRegion:
-    Default: 'us-east-1'
+    Default: 'eu-west-1'
     Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
     Type: String
   QSS3KeyPrefix:
@@ -334,6 +386,7 @@ Conditions:
 Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Retain
     Properties:
       TemplateURL: 
         !Sub 
@@ -352,6 +405,7 @@ Resources:
         VPCCIDR: !Ref 'VPCCIDR'
   WorkloadStack:
     Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Retain
     Properties:
       TemplateURL: 
         !Sub
